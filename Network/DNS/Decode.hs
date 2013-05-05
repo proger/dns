@@ -2,6 +2,7 @@
 
 module Network.DNS.Decode (
     decode
+  , decodeStrict
   , receive
   ) where
 
@@ -33,6 +34,9 @@ receive sock = receiveDNSFormat $ sourceSocket sock
 -}
 decode :: BL.ByteString -> Either String DNSFormat
 decode bs = fst <$> runSGet decodeResponse bs
+
+decodeStrict :: BS.ByteString -> Either String DNSFormat
+decodeStrict bs = fst <$> runSGetStrict decodeResponse bs
 
 ----------------------------------------------------------------
 receiveDNSFormat :: Source (ResourceT IO) ByteString -> IO DNSFormat

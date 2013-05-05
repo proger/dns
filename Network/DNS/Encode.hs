@@ -1,12 +1,13 @@
 {-# LANGUAGE RecordWildCards #-}
 module Network.DNS.Encode (
     encode
+  , encodeStrict
   , composeQuery
   ) where
 
 import qualified Blaze.ByteString.Builder as BB (toByteString, fromWrite, writeInt16be)
 import qualified Data.ByteString.Lazy.Char8 as BL (ByteString)
-import qualified Data.ByteString.Char8 as BS (length, null, break, drop)
+import qualified Data.ByteString.Char8 as BS
 import Network.DNS.StateBinary
 import Network.DNS.Internal
 import Data.Monoid
@@ -40,6 +41,9 @@ composeQuery idt qs = encode qry
 -}
 encode :: DNSFormat -> BL.ByteString
 encode fmt = runSPut (encodeDNSFormat fmt)
+
+encodeStrict :: DNSFormat -> BS.ByteString
+encodeStrict fmt = runSPutStrict (encodeDNSFormat fmt)
 
 ----------------------------------------------------------------
 

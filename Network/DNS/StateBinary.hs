@@ -6,9 +6,10 @@ import Control.Applicative
 import Control.Monad.State
 import Data.Attoparsec.ByteString
 import qualified Data.Attoparsec.ByteString.Lazy as AL
+import qualified Data.Attoparsec.ByteString as AS
 import Data.ByteString (ByteString)
-import qualified Data.ByteString as BS (unpack, length)
-import qualified Data.ByteString.Lazy as BL (ByteString)
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy as BL
 import Data.Conduit
 import Data.Conduit.Attoparsec
 import Data.Int
@@ -167,3 +168,9 @@ runSGet parser bs = AL.eitherResult $ AL.parse (runStateT parser initialState) b
 
 runSPut :: SPut -> BL.ByteString
 runSPut = toLazyByteString . fromWrite . flip evalState initialWState
+
+runSGetStrict :: SGet a -> BS.ByteString -> Either String (a, PState)
+runSGetStrict parser bs = AS.eitherResult $ AS.parse (runStateT parser initialState) bs
+
+runSPutStrict :: SPut -> BS.ByteString
+runSPutStrict = toByteString . fromWrite . flip evalState initialWState
